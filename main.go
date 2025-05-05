@@ -5,14 +5,18 @@ import (
 	"log"
 	"net/http"
 
+	"example.com/build-an-application/repository"
 	"example.com/build-an-application/server"
 )
 
 func main() {
-	// 直接把function包成interface
-	handler := http.HandlerFunc(server.PlayerServer)
 
-	err := http.ListenAndServe(":5000", handler)
+	// 直接把function包成interface
+	server := &server.PlayerServer{
+		Store: repository.NewInMemoryPlayingStore(),
+	}
+
+	err := http.ListenAndServe(":5000", server)
 
 	if err != nil {
 		log.Fatal(err)
