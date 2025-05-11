@@ -1,6 +1,10 @@
 package repository
 
-import "sync"
+import (
+	"sync"
+
+	"example.com/build-an-application/model"
+)
 
 // InMemoryPlayerStore a
 type InMemoryPlayerStore struct {
@@ -29,4 +33,8 @@ func (i *InMemoryPlayerStore) RecordWin(name string) {
 	defer i.mux.Unlock()
 
 	i.store[name]++
+}
+
+func (i *InMemoryPlayerStore) GetLeague() []model.Player {
+	return nil
 }
