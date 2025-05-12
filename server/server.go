@@ -45,11 +45,7 @@ func (ps *PlayerServer) leagueHandler(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("content-type", jsonContentType) // 先set header
 	w.WriteHeader(http.StatusOK)                    // 再set status
-	json.NewEncoder(w).Encode(ps.GetLeague())       // 最後寫body
-}
-
-func (ps *PlayerServer) GetLeague() []model.Player {
-	return ps.Store.GetLeague()
+	json.NewEncoder(w).Encode(ps.Store.GetLeague()) // 最後寫body
 }
 
 func (ps *PlayerServer) playerHandler(w http.ResponseWriter, r *http.Request) {

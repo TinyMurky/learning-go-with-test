@@ -35,6 +35,16 @@ func (i *InMemoryPlayerStore) RecordWin(name string) {
 	i.store[name]++
 }
 
+// GetLeague a
 func (i *InMemoryPlayerStore) GetLeague() []model.Player {
-	return nil
+	league := make([]model.Player, 0, len(i.store))
+
+	for name, wins := range i.store {
+		league = append(league, model.Player{
+			Name: name,
+			Wins: wins,
+		})
+	}
+
+	return league
 }

@@ -2,11 +2,8 @@
 package server
 
 import (
-	"encoding/json"
-	"io"
 	"net/http"
 	"net/http/httptest"
-	"reflect"
 	"testing"
 
 	"example.com/build-an-application/model"
@@ -118,51 +115,22 @@ func TestLeague(t *testing.T) {
 
 	t.Run("it should returns 200 on /league", func(t *testing.T) {
 		wantedLeague := []model.Player{
-			{"Cleo", 32},
-			{"Chris", 20},
-			{"Tiest", 14},
+			{Name: "Cleo", Wins: 32},
+			{Name: "Chris", Wins: 20},
+			{Name: "Tiest", Wins: 14},
 		}
 
-		request := newLeagueRequest()
+		request := utils.NewLeagueRequest()
 		response := httptest.NewRecorder()
 
 		server.ServeHTTP(response, request)
 
-		got := getLeagueFromResponse(t, response.Body)
+		got := utils.GetLeagueFromResponse(t, response.Body)
 
-		assertLeague(t, got, wantedLeague)
+		utils.AssertLeague(t, got, wantedLeague)
 		utils.AssertStatus(t, response.Code, http.StatusOK)
 
 		// content type
-
-		if response.Result().Header.Get("content-type") != "application/json" {
-			t.Errorf("response did not have content-type of application/json, got %v", response.Result().Header)
-		}
+		utils.AssertContentType(t, response, jsonContentType)
 	})
-}
-
-func newLeagueRequest() *http.Request {
-	req, _ := http.NewRequest(http.MethodGet, "/league", nil)
-	return req
-}
-
-func getLeagueFromResponse(t testing.TB, body io.Reader) (league []model.Player) {
-	t.Helper()
-
-	// 單純測試一下可不可以被parse
-	err := json.NewDecoder(body).Decode(&league)
-
-	if err != nil {
-		t.Fatalf("Unable to parse response from server %q into slice of Player, '%v'", body, err)
-	}
-
-	return
-}
-
-func assertLeague(t testing.TB, got, want []model.Player) {
-	t.Helper()
-
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("got %v want %v", got, want)
-	}
 }
