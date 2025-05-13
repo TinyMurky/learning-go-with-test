@@ -6,8 +6,12 @@ import (
 	"io"
 )
 
-func NewLeague(rdr io.Reader) ([]Player, error) {
-	var league []Player
+// League a
+type League []Player
+
+// NewLeague a
+func NewLeague(rdr io.Reader) (League, error) {
+	var league League
 	err := json.NewDecoder(rdr).Decode(&league)
 
 	if err != nil {
@@ -15,4 +19,15 @@ func NewLeague(rdr io.Reader) ([]Player, error) {
 	}
 
 	return league, err
+}
+
+func (l League) Find(name string) *Player {
+	// range 會複製值
+	for i, p := range l {
+		if p.Name == name {
+			return &l[i]
+		}
+	}
+
+	return nil
 }
