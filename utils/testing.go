@@ -12,6 +12,7 @@ import (
 	"example.com/build-an-application/model"
 )
 
+// NewGetScoreRequest a
 func NewGetScoreRequest(name string) *http.Request {
 	url := fmt.Sprintf("/players/%s", name)
 	request, _ := http.NewRequest(
@@ -22,6 +23,7 @@ func NewGetScoreRequest(name string) *http.Request {
 	return request
 }
 
+// NewPostWinRequest a
 func NewPostWinRequest(name string) *http.Request {
 	url := fmt.Sprintf("/players/%s", name)
 	request, _ := http.NewRequest(
@@ -32,6 +34,7 @@ func NewPostWinRequest(name string) *http.Request {
 	return request
 }
 
+// AssertResponseBody a
 func AssertResponseBody[T comparable](t testing.TB, got, want T) {
 	t.Helper()
 
@@ -40,6 +43,7 @@ func AssertResponseBody[T comparable](t testing.TB, got, want T) {
 	}
 }
 
+// AssertStatus a
 func AssertStatus(t testing.TB, got, want int) {
 	t.Helper()
 
@@ -48,11 +52,13 @@ func AssertStatus(t testing.TB, got, want int) {
 	}
 }
 
+// NewLeagueRequest a
 func NewLeagueRequest() *http.Request {
 	req, _ := http.NewRequest(http.MethodGet, "/league", nil)
 	return req
 }
 
+// GetLeagueFromResponse a
 func GetLeagueFromResponse(t testing.TB, body io.Reader) (league []model.Player) {
 	t.Helper()
 
@@ -66,6 +72,7 @@ func GetLeagueFromResponse(t testing.TB, body io.Reader) (league []model.Player)
 	return
 }
 
+// AssertLeague a
 func AssertLeague(t testing.TB, got, want []model.Player) {
 	t.Helper()
 
@@ -74,10 +81,21 @@ func AssertLeague(t testing.TB, got, want []model.Player) {
 	}
 }
 
+// AssertContentType a
 func AssertContentType(t testing.TB, response *httptest.ResponseRecorder, want string) {
 	t.Helper()
 
 	if response.Header().Get("content-type") != want {
 		t.Errorf("response did not have content-type of %s, got %v", want, response.Header())
+	}
+}
+
+// AssertDeepEqual a
+func AssertDeepEqual[T any](t testing.TB, got, want T) {
+	t.Helper()
+
+	if !reflect.DeepEqual(got, want) {
+		t.Errorf("expect %+v, got %+v", want, got)
+
 	}
 }
