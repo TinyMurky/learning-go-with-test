@@ -44,7 +44,15 @@ func (f *FileSystemPlayerStore) RecordWin(name string) {
 
 	// player 是pointer
 	player := league.Find(name)
-	player.Wins++
+
+	if player != nil {
+		player.Wins++
+	} else {
+		league = append(league, model.Player{
+			Name: name,
+			Wins: 1,
+		})
+	}
 
 	// 移到開頭
 	f.database.Seek(0, io.SeekStart) // Read 過也要重製才能seek
